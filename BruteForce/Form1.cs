@@ -431,7 +431,7 @@ namespace BruteForce
                         CiklusiCWS.Insert(0, i);
                     }
                 }
-
+                //12
                 CiklusiCWS.Insert(0, depo);
                 CiklusiCWS.Add(depo);
 
