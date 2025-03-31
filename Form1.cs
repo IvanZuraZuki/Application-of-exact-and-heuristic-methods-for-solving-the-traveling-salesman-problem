@@ -398,10 +398,12 @@ namespace BruteForce
 
                 for (int i = 1; i < vertex; i++)
                 {
+
                     for (int j = i + 1; j < vertex; j++)
                     {
                         int saving = edgesCWS[i][depo] + edgesCWS[depo][j] - edgesCWS[i][j];
                         sortedSavings.Add(Tuple.Create(i, j, saving));
+                        sortedSavings.Add(Tuple.Create(j, i, saving));
                     }
                 }
 
@@ -409,9 +411,13 @@ namespace BruteForce
 
                 CiklusiCWS.Add(sortedSavings[0].Item1);
                 CiklusiCWS.Add(sortedSavings[0].Item2);
+                int current_count = 2;
 
                 foreach (var saving in sortedSavings)
                 {
+                    if (current_count == vertex_count - 1)
+                        break;
+
                     int i = saving.Item1;
                     int j = saving.Item2;
                     int first_element = CiklusiCWS[0];
