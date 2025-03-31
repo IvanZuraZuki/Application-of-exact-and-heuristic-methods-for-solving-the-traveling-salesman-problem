@@ -37,9 +37,12 @@
             this.btnNHH = new System.Windows.Forms.Button();
             this.CWS = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnRelocate = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnBrute
@@ -75,7 +78,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(243, 195);
+            this.groupBox1.Size = new System.Drawing.Size(178, 148);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Unos vrhova";
@@ -95,7 +98,7 @@
             this.groupBox2.Controls.Add(this.btnNHH);
             this.groupBox2.Controls.Add(this.CWS);
             this.groupBox2.Controls.Add(this.btnBrute);
-            this.groupBox2.Location = new System.Drawing.Point(12, 213);
+            this.groupBox2.Location = new System.Drawing.Point(1, 178);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(234, 122);
             this.groupBox2.TabIndex = 4;
@@ -132,11 +135,32 @@
             this.pictureBox1.Click += new System.EventHandler(this.button1_Click);
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
+            // btnRelocate
+            // 
+            this.btnRelocate.Location = new System.Drawing.Point(11, 39);
+            this.btnRelocate.Name = "btnRelocate";
+            this.btnRelocate.Size = new System.Drawing.Size(75, 23);
+            this.btnRelocate.TabIndex = 6;
+            this.btnRelocate.Text = "Relocate";
+            this.btnRelocate.UseVisualStyleBackColor = true;
+            this.btnRelocate.Click += new System.EventHandler(this.btnRelocate_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnRelocate);
+            this.groupBox3.Location = new System.Drawing.Point(1, 306);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(169, 132);
+            this.groupBox3.TabIndex = 5;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Unos vrhova";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -148,6 +172,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -163,6 +188,8 @@
         private System.Windows.Forms.Button btnNHH;
         private System.Windows.Forms.Button CWS;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btnRelocate;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }
 

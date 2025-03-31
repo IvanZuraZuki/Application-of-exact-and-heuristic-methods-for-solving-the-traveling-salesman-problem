@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.InteropServices;
 
 namespace BruteForce
 {
@@ -16,14 +18,19 @@ namespace BruteForce
 
         public static int vertex_count;
         public static double najmanja_vrijednost;
+        public static double BestRouteATMWeight;
+        public static List<int> BestRouteATMPath = new List<int>();
         public static string najbolji_put;
         public static string najbolji_putNNH;
         public bool nactraj = true;
         public Graph graph;
+
+
         public Form1()
         {
             InitializeComponent();
             graph = new Graph();
+            
         }
 
 
@@ -86,6 +93,7 @@ namespace BruteForce
             public Vertex start_vertex;
             public Vertex end_vertex;
             public double weight;
+           
 
         }
 
@@ -98,6 +106,7 @@ namespace BruteForce
             public Dictionary<int, Vertex> all_vertices = new Dictionary<int, Vertex>();
             public Dictionary<Tuple<int, int>, Edge> all_edges = new Dictionary<Tuple<int, int>, Edge>();
             public List<List<int>> svi_ciklusi = new List<List<int>>();
+            
 
             public void AddVertex(int vertex_ID, Vertex vertex)
             {
@@ -117,7 +126,7 @@ namespace BruteForce
             public void InitialiseGraph()
             {
 
-
+                
                 all_vertices.Clear();
                 all_edges.Clear();
 
@@ -241,7 +250,11 @@ namespace BruteForce
                         najmanja_vrijednost = tezina_ciklusa;
                         najbolji_put = string.Join("->", ciklus) + "->0";
                     }
+                    BestRouteATMPath =ciklus;
                 }
+
+                BestRouteATMWeight= najmanja_vrijednost;
+                
 
 
             }
@@ -344,6 +357,12 @@ namespace BruteForce
             najbolji_putNNH = string.Empty;
             najbolji_putNNH = string.Join("->", putNNH);
             MessageBox.Show($"Najbolja ruta je {najbolji_putNNH}, a tezina ciklusa je {UkupnaTezinaNNH}");
+
+            BestRouteATMWeight = UkupnaTezinaNNH;
+            BestRouteATMPath = putNNH;
+
+
+
         }
         /// <summary>
         /// Calculate the Euclidian distance between two points (x_1,y_1), (x_2,y_2).
@@ -451,10 +470,59 @@ namespace BruteForce
 
                 Console.WriteLine(final);
                 MessageBox.Show($"Najbolja ruta je {final},a tezina: {totalWeight}");
+                BestRouteATMWeight = totalWeight;
+                BestRouteATMPath = CiklusiCWS;
+
+
             }
 
 
 
+        }
+
+        private void btnRelocate_Click(object sender, EventArgs e)
+        {
+            double lastRouterWeight = double.MinValue;
+            double currentRouteWeight = -1;
+            List<int> NewPath = new List<int>();
+            NewPath = BestRouteATMPath;
+
+            while (BestRouteATMWeight > lastRouterWeight)
+            {
+                // Iterate over vertices to adjust the route
+                for (int i = 1; i < BestRouteATMPath.Count - 1; i++) // Exclude start & end depot
+                {
+                    for (int j = 1; j < BestRouteATMPath.Count - 1; j++)
+                    {
+                        int city = NewPath[i];
+                        NewPath.RemoveAt(i);
+                        NewPath.Insert(j, city);
+
+                        currentRouteWeight = 0; // Reset currentRouteWeight before calculating
+
+
+                        for (int k = 0; k < NewPath.Count - 1; k++)
+                        {
+                            currentRouteWeight += graph.all_edges[Tuple.Create(NewPath[k], NewPath[k + 1])].weight;
+                        }
+
+                        if (BestRouteATMWeight > currentRouteWeight)
+                        {
+                            lastRouterWeight = currentRouteWeight;
+                            BestRouteATMWeight = currentRouteWeight;
+                        }
+                       
+
+                        if (lastRouterWeight == currentRouteWeight || lastRouterWeight > currentRouteWeight)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            MessageBox.Show($"Best route after relocation: {lastRouterWeight}");
+            pictureBox1.Refresh();
         }
     }
 }
