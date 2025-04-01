@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace BruteForce
 {
@@ -451,58 +452,66 @@ namespace BruteForce
                 MessageBox.Show($"Najbolja ruta je {final},a tezina: {totalWeight}");
                 BestRouteATMWeight = totalWeight;
             }
-            
+
 
 
 
         }
 
         private void btnRelocate_Click(object sender, EventArgs e)
-        {
-            double lastRouterWeight = double.MinValue;
-            double currentRouteWeight = -1;
-            List<int> NewPath = new List<int>();
-            NewPath = BestRouteATMPath;
+        {  
+            double lastRouterWeight;
+            double currentRouteWeight;
+            bool improvement = true;
 
-            while (BestRouteATMWeight > lastRouterWeight)
+            List<int> NewPath = new List<int>(BestRouteATMPath); // Create a copy
+
+            while (improvement)
             {
-                // Iterate over vertices to adjust the route
+                improvement = false; // Assume no improvement initially
+                lastRouterWeight = BestRouteATMWeight;
+
                 for (int i = 1; i < BestRouteATMPath.Count - 1; i++) // Exclude start & end depot
                 {
                     for (int j = 1; j < BestRouteATMPath.Count - 1; j++)
                     {
+                        if (i == j) continue; // Skip if position is t
+                                              // he same
+
                         int city = NewPath[i];
                         NewPath.RemoveAt(i);
                         NewPath.Insert(j, city);
 
-                        currentRouteWeight = 0; // Reset currentRouteWeight before calculating
-
-
+                        // Compute new route weight
+                        currentRouteWeight = 0;
                         for (int k = 0; k < NewPath.Count - 1; k++)
                         {
                             currentRouteWeight += graph.all_edges[Tuple.Create(NewPath[k], NewPath[k + 1])].weight;
                         }
 
-                        if (BestRouteATMWeight > currentRouteWeight)
+                        // If new route is better, update best route weight
+                        if (currentRouteWeight < BestRouteATMWeight)
                         {
-                            lastRouterWeight = BestRouteATMWeight;
+                            BestRouteATMWeight = currentRouteWeight;
+                            BestRouteATMPath = new List<int>(NewPath); // Store the improved route
+                            improvement = true; // Mark that an improvement was found
                         }
                         else
                         {
-                            lastRouterWeight = currentRouteWeight;
-                        }
-
-                        if (lastRouterWeight == currentRouteWeight || lastRouterWeight > currentRouteWeight)
-                        {
-                            break;
+                            // Revert the swap if it didn’t improve the solution
+                            NewPath.RemoveAt(j);
+                            NewPath.Insert(i, city);
                         }
                     }
-                    MessageBox.Show($"Best route after relocation: {lastRouterWeight}");
                 }
             }
+
+            MessageBox.Show($"Best route after relocation: {BestRouteATMWeight}");
         }
+
     }
 }
+
 
 
 
