@@ -37,6 +37,7 @@
             this.btnNHH = new System.Windows.Forms.Button();
             this.CWS = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnRelocate = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -132,11 +133,22 @@
             this.pictureBox1.Click += new System.EventHandler(this.button1_Click);
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
+            // btnRelocate
+            // 
+            this.btnRelocate.Location = new System.Drawing.Point(24, 368);
+            this.btnRelocate.Name = "btnRelocate";
+            this.btnRelocate.Size = new System.Drawing.Size(75, 23);
+            this.btnRelocate.TabIndex = 6;
+            this.btnRelocate.Text = "Relocate";
+            this.btnRelocate.UseVisualStyleBackColor = true;
+            this.btnRelocate.Click += new System.EventHandler(this.btnRelocate_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnRelocate);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -163,6 +175,7 @@
         private System.Windows.Forms.Button btnNHH;
         private System.Windows.Forms.Button CWS;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btnRelocate;
     }
 }
 
