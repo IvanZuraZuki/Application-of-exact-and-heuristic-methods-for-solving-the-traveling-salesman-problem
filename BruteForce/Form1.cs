@@ -243,11 +243,11 @@ namespace BruteForce
                     {
                         najmanja_vrijednost = tezina_ciklusa;
                         najbolji_put = string.Join("->", ciklus) + "->0";
+                        BestRouteATMPath = ciklus;
+                        BestRouteATMWeight = najmanja_vrijednost;
                     }
                 }
-                BestRouteATMWeight = najmanja_vrijednost;
-
-
+               
             }
         }
 
@@ -348,6 +348,7 @@ namespace BruteForce
             najbolji_putNNH = string.Empty;
             najbolji_putNNH = string.Join("->", putNNH);
             MessageBox.Show($"Najbolja ruta je {najbolji_putNNH}, a tezina ciklusa je {UkupnaTezinaNNH}");
+            BestRouteATMPath = putNNH;
             BestRouteATMWeight = UkupnaTezinaNNH;
         }
         /// <summary>
@@ -368,7 +369,7 @@ namespace BruteForce
             Graf graf = new Graf(vertex_count);
             foreach (var edge in graph.all_edges.Values)
             {
-                graf.dodavanjeBridova(edge.start_vertex.vertex_ID, edge.end_vertex.vertex_ID, (int)edge.weight);
+                graf.dodavanjeBridova(edge.start_vertex.vertex_ID, edge.end_vertex.vertex_ID, (double)edge.weight);
             }
             graf.CWS(vertex_count);
 
@@ -377,20 +378,20 @@ namespace BruteForce
 
         public class Graf
         {
-            private Dictionary<int, Dictionary<int, int>> edgesCWS;
+            private Dictionary<int, Dictionary<int, double>> edgesCWS;
             private List<int> CiklusiCWS = new List<int>();
 
             public Graf(int vertex)
             {
-                edgesCWS = new Dictionary<int, Dictionary<int, int>>();
+                edgesCWS = new Dictionary<int, Dictionary<int, double>>();
 
                 for (int i = 0; i < vertex; i++)
                 {
-                    edgesCWS[i] = new Dictionary<int, int>();
+                    edgesCWS[i] = new Dictionary<int, double>();
                 }
             }
 
-            public void dodavanjeBridova(int u, int v, int tezina)
+            public void dodavanjeBridova(int u, int v, double tezina)
             {
                 edgesCWS[u][v] = tezina;
                 edgesCWS[v][u] = tezina;
@@ -399,14 +400,16 @@ namespace BruteForce
             public void CWS(int vertex)
             {
                 int depo = 0;
-                List<Tuple<int, int, int>> sortedSavings = new List<Tuple<int, int, int>>();
+                List<Tuple<int, int, double>> sortedSavings = new List<Tuple<int, int, double>>();
 
                 for (int i = 1; i < vertex; i++)
                 {
                     for (int j = i + 1; j < vertex; j++)
                     {
-                        int saving = edgesCWS[i][depo] + edgesCWS[depo][j] - edgesCWS[i][j];
+                        double saving = edgesCWS[i][depo] + edgesCWS[depo][j] - edgesCWS[i][j];
                         sortedSavings.Add(Tuple.Create(i, j, saving));
+                        sortedSavings.Add(Tuple.Create(j, i, saving));
+
                     }
                 }
 
@@ -414,9 +417,13 @@ namespace BruteForce
 
                 CiklusiCWS.Add(sortedSavings[0].Item1);
                 CiklusiCWS.Add(sortedSavings[0].Item2);
+                int current_count = 2;
 
                 foreach (var saving in sortedSavings)
                 {
+                    if (current_count == vertex_count - 1)
+                        break;
+
                     int i = saving.Item1;
                     int j = saving.Item2;
                     int first_element = CiklusiCWS[0];
@@ -430,10 +437,12 @@ namespace BruteForce
                     if (i == last_element && !CiklusiCWS.Contains(j))
                     {
                         CiklusiCWS.Add(j);
+                        current_count++;
                     }
                     else if (!CiklusiCWS.Contains(i) && j == first_element)
                     {
                         CiklusiCWS.Insert(0, i);
+                        current_count++;
                     }
                 }
                 //12
@@ -445,21 +454,20 @@ namespace BruteForce
                 double totalWeight = 0;
                 for (int k = 0; k < CiklusiCWS.Count - 1; k++)
                 {
-                    totalWeight += edgesCWS[CiklusiCWS[k]][CiklusiCWS[k + 1]];
+                    totalWeight += (double)edgesCWS[CiklusiCWS[k]][CiklusiCWS[k + 1]];
+
                 }
 
                 Console.WriteLine(final);
-                MessageBox.Show($"Najbolja ruta je {final},a tezina: {totalWeight}");
+                MessageBox.Show($"Najbolja ruta je {final},a tezina: {totalWeight:F2}");
+                BestRouteATMPath = CiklusiCWS;
                 BestRouteATMWeight = totalWeight;
+
             }
-
-
-
-
         }
 
-        private void btnRelocate_Click(object sender, EventArgs e)
-        {  
+            private void btnRelocate_Click(object sender, EventArgs e)
+        {
             double lastRouterWeight;
             double currentRouteWeight;
             bool improvement = true;
@@ -506,9 +514,8 @@ namespace BruteForce
                 }
             }
 
-            MessageBox.Show($"Best route after relocation: {BestRouteATMWeight}");
+            MessageBox.Show($"Best route after relocation: {BestRouteATMWeight}\n{string.Join("->", NewPath)}");
         }
-
     }
 }
 
